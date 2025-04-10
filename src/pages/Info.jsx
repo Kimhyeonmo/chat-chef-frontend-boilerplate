@@ -3,7 +3,7 @@ import PrevButton from "../components/PrevButton";
 import InfoInput from "../components/InfoInput";
 import AddButton from "../components/AddButton";
 import Button from "../components/Button";
-
+import Title from "../components/Title";
 const Info = () => {
   // logic
 
@@ -26,14 +26,10 @@ const Info = () => {
       <PrevButton />
       {/* END:뒤로가기 버튼 */}
       <div className="h-full flex flex-col">
-        {/* TODO:Title 컴포넌트 */}
-        <div className="px-2 pt-6">
-          <h1 className="text-4.5xl font-black text-white">
-            당신의 냉장고를 알려주세요
-          </h1>
-        </div>
-        {/* // TODO:Title 컴포넌트 */}
-
+        <Title
+          title="서비스 소개"
+          description="이 서비스는 GPT를 활용해 남은 재료로 가능한 요리를 추천합니다."
+        />
         {/* START:form 영역 */}
         <div className="mt-20 overflow-auto">
           <form>
