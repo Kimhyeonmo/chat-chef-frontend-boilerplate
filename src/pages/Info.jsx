@@ -4,15 +4,26 @@ import InfoInput from "../components/InfoInput";
 import AddButton from "../components/AddButton";
 import Button from "../components/Button";
 import Title from "../components/Title";
+import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate 훅을 가져옵니다.
 const Info = () => {
   // logic
-
+  const navigate = useNavigate(); // 컴포넌트 내부 최상단에 선언
   // TODO: set함수 추가하기
-  const [ingredientList] = useState([]); // 사용자가 입력할 재료 목록
+  const [ingredientList, setIngredientList] = useState([]); // 사용자가 입력할 재료 목록
+  console.log("🚀 ~ Info ~ ingredientList:", ingredientList)
 
   const addIngredient = () => {
-    console.log("재료 추가하기");
+    const id = Date.now
+    const newIngredient = {
+      //  id: id,
+      id,
+      lable: 'ingredient_%{id}',
+      text: "재료명",
+      value: "",
+    };
+    setIngredientList([...ingredientList, newIngredient]);
   };
+  console.log("🚀 ~ addIngredient ~ ingredientList:", ingredientList)
 
   const handleNext = () => {
     console.log("chat페이지로 이동");
