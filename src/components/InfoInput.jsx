@@ -3,8 +3,8 @@ import { FaRegTrashAlt } from "react-icons/fa";
 
 const InfoInput = ({ content }) => {
   // logic
-  const { label, text } = content;
 
+  const { label, text } = content;
   const onRemove = () => {
     console.log("재료 삭제하기");
   };

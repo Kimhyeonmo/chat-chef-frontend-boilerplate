@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+//import MessageBox from "../components/MessageBox";
 import PrevButton from "../components/PrevButton";
 import InfoInput from "../components/InfoInput";
 import AddButton from "../components/AddButton";
 import Button from "../components/Button";
 import Title from "../components/Title";
-import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate 훅을 가져옵니다.
 const Info = () => {
   // logic
-  const navigate = useNavigate(); // 컴포넌트 내부 최상단에 선언
+
   // TODO: set함수 추가하기
   const [ingredientList, setIngredientList] = useState([]); // 사용자가 입력할 재료 목록
   console.log("🚀 ~ Info ~ ingredientList:", ingredientList)
@@ -17,17 +17,30 @@ const Info = () => {
     const newIngredient = {
       //  id: id,
       id,
-      lable: 'ingredient_%{id}',
+      label: `ingredient_${id}`,
       text: "재료명",
       value: "",
     };
     setIngredientList([...ingredientList, newIngredient]);
   };
-  console.log("🚀 ~ addIngredient ~ ingredientList:", ingredientList)
+
 
   const handleNext = () => {
     console.log("chat페이지로 이동");
   };
+  //USEEFFECT
+  //1. 컴포넌트가 처음 렌더링될 때 한번만실행됩니다.
+  useEffect(() => {
+    console.log("한번만 실행");
+  })
+  //2. 페이지내 있는 sate가 변경될 때마다 실행됩니다.
+  useEffect(() => {
+    console.log("state가 변경될 때마다 실행됨");
+  })
+  //3. 특정 stata가 변경될 때마다 실행됩니다.
+  useEffect(() => {
+    console.log("🚀  ingredientList:", ingredientList)
+  }, [ingredientList]);
 
   // view
   return (
