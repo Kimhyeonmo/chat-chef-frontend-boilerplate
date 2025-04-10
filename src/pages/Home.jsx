@@ -3,10 +3,29 @@ import Button from "../components/Button";
 
 const Home = () => {
   // logic
-
-  const handleStart = () => {
+  // async 비동기 함수
+  const handleStart = async () => {
+    alert("handleStart 실행됨");
     console.log("info페이지로 이동");
+    try {
+      const response = await fetch("http://localhost:8080/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userMessage: "안녕하세요" })
+      }
+      );
+      const result = response.json();
+      console.log("🚀 ~ handleStart ~ result:", result)
+      if (!response.ok) {
+        console.error("서버 응답 실패:", response.status);
+        return;
+      }
+    }
+    catch (error) {
+      console.error("Error while navigating to info page:", error);
+    }
   };
+
 
   // view
   return (
