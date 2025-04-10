@@ -1,9 +1,11 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate 훅을 가져옵니다.
 const PrevButton = () => {
   // logic
+  const navigate = useNavigate(); // 컴포넌트 내부 최상단에 선언
   const hadlePrev = () => {
     console.log("이전 페이지로 이동");
+    navigate(-1); // 이전 페이지로 이동
   };
 
   // view
