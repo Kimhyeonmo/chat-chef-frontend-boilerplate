@@ -1,69 +1,93 @@
-import React, { useState } from "react";
-import MessageBox from "../components/MessageBox";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import PrevButton from "../components/PrevButton";
-import { MoonLoader } from "react-spinners";
+import MessageBox from "../components/MessageBox";
 
 const Chat = () => {
-  // logic
+  const location = useLocation();
+  const { ingredients, result } = location.state || {};
 
+  const [messages, setMessages] = useState([]);
+  const [isMessageLoading, setIsMessageLoading] = useState(false);
   const [value, setValue] = useState("");
 
-  // TODO: set함수 추가하기
-  const [messages] = useState([]); // chatGPT와 사용자의 대화 메시지 배열
-  const [isInfoLoading] = useState(false); // 최초 정보 요청시 로딩
-  const [isMessageLoading] = useState(true); // 사용자와 메시지 주고 받을때 로딩
-  const hadleChange = (event) => {
-    const { value } = event.target;
-    console.log("value==>", value);
-    setValue(value);
+  useEffect(() => {
+    if (result?.data) {
+      const initialMessages = Array.isArray(result.data)
+        ? result.data
+        : [result.data]; // ✅ 단일 객체인 경우도 배열로 래핑
+      setMessages(initialMessages);
+    }
+  }, [result]);
+
+  if (!ingredients || !result) {
+    return (
+      <div className="p-10 text-center text-gray-500">
+        로딩 중입니다...
+      </div>
+    );
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!value.trim()) return;
+
+    const userMessage = { role: "user", content: value };
+    const updatedMessages = [...messages, userMessage];
+
+    setMessages(updatedMessages);
+    setValue("");
+    setIsMessageLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userMessage,
+          messages,
+        }),
+      });
+
+      const result = await response.json();
+      if (result?.data) {
+        setMessages((prev) => [...prev, result.data]);
+      }
+    } catch (err) {
+      console.error("GPT 오류:", err);
+    } finally {
+      setIsMessageLoading(false);
+    }
   };
 
-  const hadleSubmit = (event) => {
-    event.preventDefault();
-    console.log("메시지 보내기");
-  };
-
-  // view
   return (
     <div className="w-full h-full px-6 pt-10 break-keep overflow-auto">
-      {isInfoLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-70">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <MoonLoader color="#46A195" />
-          </div>
-        </div>
-      )}
-
-      {/* START: 로딩 스피너 */}
-      {/* START:뒤로가기 버튼 */}
       <PrevButton />
-      {/* END:뒤로가기 버튼 */}
       <div className="h-full flex flex-col">
-        {/* START:헤더 영역 */}
+        {/* 헤더 */}
         <div className="-mx-6 -mt-10 py-7 bg-chef-green-500">
-          <span className="block text-xl text-center text-white">
-            맛있는 쉐프
-          </span>
+          <span className="block text-xl text-center text-white">맛있는 쉐프</span>
         </div>
-        {/* END:헤더 영역 */}
-        {/* START:채팅 영역 */}
+
+        {/* 메시지 박스 */}
         <div className="overflow-auto">
           <MessageBox messages={messages} isLoading={isMessageLoading} />
         </div>
-        {/* END:채팅 영역 */}
-        {/* START:메시지 입력 영역 */}
+
+        {/* 입력창 */}
         <div className="mt-auto flex py-5 -mx-2 border-t border-gray-100">
           <form
             id="sendForm"
             className="w-full px-2 h-full"
-            onSubmit={hadleSubmit}
+            onSubmit={handleSubmit}
           >
             <input
-              className="w-full text-sm px-3 py-2 h-full block rounded-xl bg-gray-100 focus:"
+              className="w-full text-sm px-3 py-2 h-full block rounded-xl bg-gray-100"
               type="text"
               name="message"
               value={value}
-              onChange={hadleChange}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="쉐프에게 물어보세요!"
             />
           </form>
           <button
@@ -74,7 +98,6 @@ const Chat = () => {
             보내기
           </button>
         </div>
-        {/* END:메시지 입력 영역 */}
       </div>
     </div>
   );
