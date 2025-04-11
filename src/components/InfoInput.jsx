@@ -15,9 +15,9 @@ const InfoInput = ({ content, onRemove, onChange }) => {
 
     // 유효성 체크
     if (newValue.trim() === "") {
-      console.log(`❗ 재료 [${label}] 값이 비어있습니다`);
+      // console.log(`❗ 재료 [${label}] 값이 비어있습니다`);
     } else {
-      console.log(`✅ 재료 [${label}] 입력값: ${newValue}`);
+      //   console.log(`✅ 재료 [${label}] 입력값: ${newValue}`);
     }
 
     // 부모에게 변경 알림
